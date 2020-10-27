@@ -78,17 +78,20 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString(LOCALE, DATE_FORMAT_OPTIONS);
 }
 
+function formatToDateTime(date) {
+  return new Date(date).toISOString().split('T')[0];
+}
+
 export const app = new Vue({
   el: '#app',
-  filters: {
-    formatDate
-  },
-  data: {
-    id: MEETUP_ID,
-    meetup: {},
-    isLoading: false,
-    isFetchData: false,
-    error: ''
+  data() {
+    return {
+      id: MEETUP_ID,
+      meetup: {},
+      isLoading: false,
+      isFetchData: false,
+      error: ''
+    }
   },
   computed: {
     meetupCoverStyle() {
@@ -101,6 +104,26 @@ export const app = new Vue({
     },
     isShowMeetup() {
       return !this.isLoading && this.isFetchData;
+    },
+    preparedAgenda() {
+      return this.meetup?.agenda.map(item => ({
+        id: item.id,
+        startsAt: item.startsAt,
+        endsAt: item.endsAt,
+        speaker: item.speaker,
+        language: item.language,
+        description: item.description,
+        iconUrl: this.getItemIconUrl(item),
+        title: this.getTitle(item),
+        isShowSpeakerBlock: this.isShowDot(item),
+        isShowDot: this.isShowSpeakerBlock(item)
+      }));
+    },
+    formattedMeetupDate() {
+      return this.meetup.date ? formatDate(this.meetup.date) : '';
+    },
+    dateTime() {
+      return this.meetup.date ? formatToDateTime(this.meetup.date) : '';
     }
   },
   watch: {
@@ -126,7 +149,7 @@ export const app = new Vue({
     getItemIconUrl({ type }) {
       return `/assets/icons/icon-${icons[type]}.svg`;
     },
-    getTitleByType({ title, type }) {
+    getTitle({ title, type }) {
       return title || titles[type];
     },
     isShowDot({ speaker, language }) {
@@ -137,6 +160,3 @@ export const app = new Vue({
     }
   }
 });
-
-window.app = app;
-console.log('Now you can change meetups right here: "app.id = ${meetupId}"');

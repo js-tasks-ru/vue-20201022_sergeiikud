@@ -8,8 +8,7 @@ const app = new Vue({
     };
   },
   methods: {
-    incrementCounter(e) {
-      e.preventDefault();
+    incrementCounter() {
       this.count++;
     }
   }

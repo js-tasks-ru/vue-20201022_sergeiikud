@@ -61,22 +61,22 @@
             </p>
             <template v-else>
               <div
-                v-for="item in meetup.agenda"
+                v-for="item in preparedAgenda"
                 :key="item.id"
                 class="meetup-agenda__item">
                 <div class="meetup-agenda__item-col">
                   <img
-                    :src="getItemIconUrl(item)"
+                    :src="item.iconUrl"
                     class="icon"
                     alt="icon" />
                 </div>
                 <div class="meetup-agenda__item-col">{{ item.startsAt }} - {{ item.endsAt }}</div>
                 <div class="meetup-agenda__item-col">
-                  <h5 class="meetup-agenda__title" v-html="getTitleByType(item)"></h5>
-                  <p v-if="isShowSpeakerBlock(item)">
+                  <h5 class="meetup-agenda__title">{{ item.title }}</h5>
+                  <p v-if="item.isShowSpeakerBlock">
                     <span>{{ item.speaker }}</span>
                     <span
-                      v-if="isShowDot(item)"
+                      v-if="item.isShowDot"
                       class="meetup-agenda__dot"></span>
                     <span class="meetup-agenda__lang">{{ item.language }}</span>
                   </p>
@@ -89,26 +89,26 @@
 
         <div class="meetup__aside">
           <ul class="info-list">
-            <li v-if="meetup.organizer">
+            <li>
               <img
                 class="icon info-list__icon"
                 alt="icon"
                 src="/assets/icons/icon-user.svg" />
               {{ meetup.organizer }}
             </li>
-            <li v-if="meetup.place">
+            <li>
               <img
                 class="icon info-list__icon"
                 alt="icon"
                 src="/assets/icons/icon-map.svg" />
               {{ meetup.place }}
             </li>
-            <li v-if="meetup.date">
+            <li>
               <img
                 class="icon info-list__icon"
                 alt="icon"
                 src="/assets/icons/icon-cal-lg.svg" />
-              <time datetime="2020-02-31">{{ meetup.date | formatDate }}</time>
+              <time :datetime="dateTime">{{ formattedMeetupDate }}</time>
             </li>
           </ul>
         </div>
