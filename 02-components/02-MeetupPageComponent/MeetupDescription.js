@@ -1,5 +1,10 @@
 export const MeetupDescription = {
-  template: `<p class="meetup-description">Описание</p>`,
-
-  // Пропсы
+  name: 'MeetupDescription',
+  template: `<p v-if="description" class="meetup-description">{{ description }}</p>`,
+  props: {
+    description: {
+      type: String,
+      default: '',
+    },
+  },
 };
