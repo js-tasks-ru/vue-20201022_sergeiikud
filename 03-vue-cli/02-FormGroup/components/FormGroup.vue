@@ -1,6 +1,8 @@
 <template>
   <div class="form-group" :class="inlineClass">
-    <label class="form-label">{{ label }}</label>
+    <label v-if="label" class="form-label">
+      {{ label }}
+    </label>
     <slot />
   </div>
 </template>
