@@ -1,12 +1,13 @@
 <template>
   <div class="toasts">
-    <div class="toast toast_success">
-      <app-icon icon="check-circle" />
-      <span>Success</span>
-    </div>
-    <div class="toast toast_error">
-      <app-icon icon="alert-circle" />
-      <span>Error</span>
+    <div
+      v-for="toast in toasts"
+      :key="toast.id"
+      :class="toast.className"
+      class="toast"
+    >
+      <app-icon :icon="toast.icon" />
+      <span>{{ toast.message }}</span>
     </div>
   </div>
 </template>
@@ -18,13 +19,41 @@ const DELAY = 5000;
 
 export default {
   name: 'AppToast',
-
-  components: { AppIcon },
-
+  components: {
+    AppIcon,
+  },
+  data() {
+    return {
+      toasts: [],
+    };
+  },
   methods: {
-    error(message) {},
-
-    success(message) {},
+    getUniqueId() {
+      return Date.now() + Math.random();
+    },
+    scheduleRemoveToast(id, delay) {
+      // delay Может быть полезен, когда ошибки и упешные уведомления нужно показывать разное время
+      setTimeout(() => {
+        this.toasts = this.toasts.filter((toast) => toast.id !== id);
+      }, delay);
+    },
+    addToast(message, isError = true) {
+      const id = this.getUniqueId();
+      const newToast = {
+        id,
+        message,
+        className: isError ? 'toast_error' : 'toast_success',
+        icon: isError ? 'alert-circle' : 'check-circle',
+      };
+      this.toasts.push(newToast);
+      this.scheduleRemoveToast(id, DELAY);
+    },
+    error(message) {
+      this.addToast(message, true);
+    },
+    success(message) {
+      this.addToast(message, false);
+    },
   },
 };
 </script>
