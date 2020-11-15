@@ -1,18 +1,26 @@
 <template>
-  <div class="dropdown show">
-    <button type="button" class="button dropdown__toggle dropdown__toggle_icon">
-      <app-icon icon="coffee" />
-      Заголовок - два
+  <div class="dropdown" :class="isShowClass">
+    <button
+      type="button"
+      class="button dropdown__toggle"
+      :class="isIconClass"
+      @click="toggleDropdown"
+    >
+      <app-icon v-if="selectedItemIcon" :icon="selectedItemIcon" />
+      {{ displaySelectedText }}
     </button>
 
-    <div class="dropdown__menu show">
-      <button class="dropdown__item dropdown__item_icon" type="button">
-        <app-icon icon="coffee" />
-        раз
-      </button>
-      <button class="dropdown__item dropdown__item_icon" type="button">
-        <app-icon icon="coffee" />
-        два
+    <div class="dropdown__menu" :class="isShowClass">
+      <button
+        v-for="item in options"
+        :key="item.value"
+        :class="isDropdownIconClass"
+        class="dropdown__item"
+        type="button"
+        @click="selectItem(item.value)"
+      >
+        <app-icon v-if="item.icon" :icon="item.icon" />
+        {{ item.text }}
       </button>
     </div>
   </div>
@@ -23,9 +31,70 @@ import AppIcon from './AppIcon';
 
 export default {
   name: 'DropdownButton',
-
-  components: { AppIcon },
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: String,
+      default: '',
+    },
+    options: {
+      type: Array,
+      required: true,
+    },
+  },
+  components: {
+    AppIcon,
+  },
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
+  data() {
+    return {
+      isOpened: false,
+    };
+  },
+  computed: {
+    isShowClass() {
+      return this.isOpened ? 'show' : null;
+    },
+    selectedItem() {
+      return this.options.find((el) => el.value === this.value);
+    },
+    selectedItemIcon() {
+      return (this.selectedItem && this.selectedItem.icon) || null;
+    },
+    displaySelectedText() {
+      return this.selectedItem && this.selectedItem.text
+        ? `${this.title} - ${this.selectedItem.text}`
+        : this.title;
+    },
+    isContainIcons() {
+      return this.options.some((el) => el.icon);
+    },
+    isIconClass() {
+      return this.isContainIcons ? 'dropdown__toggle_icon' : null;
+    },
+    isDropdownIconClass() {
+      return this.isContainIcons ? 'dropdown__item_icon' : null;
+    },
+  },
+  methods: {
+    selectItem(value) {
+      this.$emit('change', value);
+      this.isOpened = false;
+    },
+    toggleDropdown() {
+      this.isOpened = !this.isOpened;
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style lang="css" scoped>
+@import '../../../public/assets/styles/_button.css';
+@import '../../../public/assets/styles/_dropdown.css';
+</style>
