@@ -3,7 +3,7 @@
     <button
       type="button"
       class="button dropdown__toggle"
-      :class="isIconClass"
+      :class="{ dropdown__toggle_icon: isContainIcons }"
       @click="toggleDropdown"
     >
       <app-icon v-if="selectedItemIcon" :icon="selectedItemIcon" />
@@ -14,7 +14,7 @@
       <button
         v-for="item in options"
         :key="item.value"
-        :class="isDropdownIconClass"
+        :class="{ dropdown__item_icon: isContainIcons }"
         class="dropdown__item"
         type="button"
         @click="selectItem(item.value)"
@@ -75,12 +75,6 @@ export default {
     isContainIcons() {
       return this.options.some((el) => el.icon);
     },
-    isIconClass() {
-      return this.isContainIcons ? 'dropdown__toggle_icon' : null;
-    },
-    isDropdownIconClass() {
-      return this.isContainIcons ? 'dropdown__item_icon' : null;
-    },
   },
   methods: {
     selectItem(value) {
@@ -95,6 +89,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import '../../../public/assets/styles/_button.css';
-@import '../../../public/assets/styles/_dropdown.css';
+@import '../assets/styles/_button.css';
+@import '../assets/styles/_dropdown.css';
 </style>
