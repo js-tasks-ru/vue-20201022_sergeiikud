@@ -3,7 +3,7 @@
     <div class="content-tabs__nav">
       <router-link
         v-for="tab in tabs"
-        :key="tab.to"
+        :key="String(tab.to)"
         :to="tab.to"
         class="content-tabs__tab"
         active-class="content-tabs__tab_active"
@@ -11,7 +11,7 @@
         {{ tab.text }}
       </router-link>
     </div>
-    <router-view class="content-tabs__content" />
+    <div class="content-tabs__content"><slot /></div>
   </div>
 </template>
 
