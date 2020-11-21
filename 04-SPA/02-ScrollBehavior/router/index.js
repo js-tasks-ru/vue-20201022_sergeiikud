@@ -4,8 +4,10 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 export function scrollBehavior(to, from, saveScrollPosition) {
-  if (to.meta && to.meta.saveScrollPosition) {
+  if (saveScrollPosition) {
     return saveScrollPosition;
+  } else if (from.meta && from.meta.saveScrollPosition && to.meta && to.meta.saveScrollPosition) {
+    return false;
   } else if (to.hash) {
     return {
       selector: to.hash,
